@@ -1,38 +1,50 @@
 export const archiveRecords = [
   {
-    id: "adaptive-cache-optimizer",
-    date: "2026-03-19",
-    project: "Adaptive Cache Optimizer",
-    failureType: "Model Drift",
-    technicalKey: "Non-stationary reward gradients",
-    abstract:
-      "The project aimed to train a lightweight reinforcement policy that dynamically reallocated cache blocks across heterogeneous workloads in a shared cluster. We expected the agent to infer temporal locality patterns and reduce miss penalties under volatile demand. Initial simulations looked promising, but real traces introduced abrupt shifts that corrupted reward estimation and destabilized policy updates. The optimizer oscillated between aggressive eviction and over-retention, producing worse latency than static heuristics. Our intended contribution was a self-correcting cache strategy for mixed scientific pipelines, yet the architecture could not maintain convergence once reward landscapes became non-stationary and measurement noise masked true utility boundaries.",
-    breakingPoint: "J(theta) = E_t[r_t]\\n\\ntheta_(k+1) = theta_k + alpha * grad_theta J(theta_k)\\n\\nif d/dt Var(r_t) >> 0, then grad estimate -> high variance -> policy collapse",
+    serial: "LE-2026-004",
+    title: "Probabilistic Memory Router",
+    class: "Scaling",
+    status: "Technical Post-Mortem",
+    objective:
+      "This project attempted to design a probabilistic routing layer that allocated latent memory shards to distributed model workers under rapidly shifting token loads. The intention was to reduce synchronization overhead while preserving retrieval quality at cluster scale. We expected confidence-weighted routing to preserve coherence and lower communication latency by avoiding full broadcasts. During benchmark expansion, worker-local confidence calibration diverged from global uncertainty signals, and contention appeared in the exact windows where retrieval precision mattered most. The route planner became unstable under bursty workloads, producing allocation thrashing and degraded throughput. The objective remained compelling, but the implementation could not hold both calibration fidelity and horizontal elasticity at once.",
+    bottleneck:
+      "P(route_i | x_t) = softmax(W h_t)_i\\n\\nif KL(P_local || P_global) > epsilon:\\n  reassignment_rate -> O(n * m)\\n  lock_contention -> saturation\\n\\nResult: throughput collapse under burst ingress",
     pivot:
-      "The failure now informs my current research on robust control under changing objective surfaces. Instead of direct policy optimization, I use uncertainty-aware bandit envelopes and bounded regret diagnostics to separate environmental volatility from estimator error before adaptation is triggered."
+      "This dead end now informs my dissertation chapter on calibration-first scaling. I shifted to bounded-assignment windows with delayed global reconciliation, using confidence audits as a gating mechanism before worker migration is allowed."
   },
   {
-    id: "graph-scheduler",
-    date: "2025-11-02",
-    project: "Graph-Constrained Scheduler",
-    failureType: "Complexity Explosion",
-    technicalKey: "State-space blowup in edge cases",
-    abstract:
-      "This study sought to build a scheduler that guaranteed dependency-safe execution for distributed experiment graphs while minimizing wall-clock completion time. The design merged topological sorting with a local search objective that reprioritized tasks whenever node runtimes deviated from forecast. In small and medium graphs, scheduling quality improved. In production graphs with deep fan-out and recurrent retries, however, search breadth expanded combinatorially. Pruning assumptions failed when error recovery inserted late-arriving dependency edges, forcing repeated global recomputation. The core objective remained valid, but the implementation crossed practical complexity limits. The dead end clarified that deterministic optimality was less valuable than predictable bounded latency under adversarial workflow growth.",
-    breakingPoint: "for each frontier F_k:\\n  candidates = permutations(F_k)\\n  score all candidates\\n\\n|F_k| = 11 -> 39,916,800 orderings",
+    serial: "LE-2026-003",
+    title: "Constraint-First Topology Compiler",
+    class: "Architectural",
+    status: "Internal Draft",
+    objective:
+      "The compiler was initiated to automatically transform research pipelines into constrained execution graphs that guaranteed reproducibility and deterministic rollback behavior. The design intent was to integrate structural validation with deployment templating so that every run produced auditable state transitions. Early prototypes succeeded for shallow dependency trees, and generated plans were readable by collaborators. Failure emerged once recursive task families and exception handlers were introduced. The compiler over-constrained legal transitions and produced brittle execution paths that broke during recovery scenarios. Instead of enabling robust experimentation, the architecture amplified edge-case complexity. The project stalled because strict compile-time guarantees prevented the runtime flexibility needed for real laboratory conditions.",
+    bottleneck:
+      "G = (V, E)\\nConstraint set C = {c_1 ... c_k}\\n\\nfor v in V:\\n  enforce all c in C on incoming and outgoing edges\\n\\nWhen |C| grows with recovery rules, satisfiable subgraphs -> empty in nontrivial branches",
     pivot:
-      "The negative result shaped my present shift toward approximation schedules with certifiable bounds. I now use incremental DAG partitioning and monotonic priority constraints, accepting minor suboptimality to guarantee tractable response times during dynamic graph mutation."
+      "The failed compiler now serves as negative evidence in my current architecture work. I replaced rigid global constraints with layered contracts: static checks for invariants and runtime adapters for exception-heavy branches."
   },
   {
-    id: "symbolic-verifier",
-    date: "2025-06-14",
-    project: "Symbolic Protocol Verifier",
-    failureType: "Assumption Violation",
-    technicalKey: "Unsound abstraction layer",
-    abstract:
-      "The verifier was intended to prove safety properties for a protocol family by translating implementation traces into symbolic constraints checked by an SMT solver. The hypothesis was that abstraction over transport semantics would preserve correctness while reducing formula size. During adversarial testing, we discovered counterexamples that bypassed the abstraction boundary through timing-coupled retransmission behavior. The solver returned satisfiable proofs under abstractions that were invalid in actual executions, creating a false guarantee of safety. Although throughput improved, semantic fidelity was compromised at the exact layer tasked with preserving invariants. The project failed as a verification system because performance gains depended on abstractions that erased critical temporal interactions.",
-    breakingPoint: "Assumed: send(a) before ack(a) implies ordered delivery\\nObserved: resend(a, t+delta) interleaves with ack(b)\\nResult: abstraction violated causality constraints",
+    serial: "LE-2026-002",
+    title: "Symbolic Sequence Verifier",
+    class: "Theoretical",
+    status: "Technical Post-Mortem",
+    objective:
+      "This verifier was started to prove ordering invariants in adaptive protocol sequences by mapping execution traces into a symbolic constraint space. The objective was to formalize guarantees for asynchronous message handling without requiring full state enumeration. We expected abstraction over transport timing to preserve soundness while making proof generation tractable. In adversarial replay tests, timing-coupled retransmissions violated the abstraction assumptions and produced satisfiable proofs that were invalid in live systems. The tool became epistemically dangerous: fast, elegant, and wrong at exactly the moments where confidence was needed. The theoretical frame remained useful, but its initial abstraction design could not represent temporal interference safely.",
+    bottleneck:
+      "Assume: send(a) < ack(a) => ordered delivery\\nObserved trace: resend(a, t+delta) interleaves ack(b)\\n\\nTherefore: model relation R_order is non-transitive under retransmission noise",
     pivot:
-      "This record now anchors my current work on multi-layer verification contracts. I treat abstraction mappings as first-class artifacts with explicit soundness tests, and I instrument runtime witness traces to continuously validate whether proof assumptions remain aligned with deployment behavior."
+      "This project now anchors my current PhD work on soundness envelopes. I keep symbolic abstractions, but each assumption is paired with runtime witness tests that can invalidate proofs when temporal drift appears."
+  },
+  {
+    serial: "LE-2026-001",
+    title: "Sparse Context Distiller",
+    class: "Scaling",
+    status: "Internal Draft",
+    objective:
+      "The distiller project aimed to compress multi-session research context into sparse latent summaries that remained semantically faithful across long-horizon experiments. The plan was to improve retrieval speed and lower memory costs while preserving justifications for each inference step. Compression benchmarks looked strong in isolation, but quality collapsed when summaries were recursively distilled over multiple update cycles. Important minority signals were repeatedly dropped, creating brittle contexts that looked coherent yet omitted critical caveats. The system performed well on static snapshots and failed under living research workflows. The objective survives, but this implementation did not maintain evidence continuity across iterative compression.",
+    bottleneck:
+      "z_t = Distill(context_t, k)\\ncontext_(t+1) = Merge(context_t, z_t)\\n\\nRepeated distillation => information loss accumulates:\\nI(context_0; context_t) -> 0 as t increases",
+    pivot:
+      "This failure redirected my dissertation toward trace-preserving summarization, where compression is constrained by citation retention and uncertainty markers rather than token limits alone."
   }
 ];

@@ -1,8 +1,8 @@
 import { archiveRecords } from "./data.js";
 
 const sortState = {
-  key: "date",
-  direction: "desc"
+  key: "serial",
+  direction: "asc"
 };
 
 const sectionFiles = {
@@ -18,8 +18,8 @@ async function loadSection(targetId, file) {
 }
 
 function compareValues(a, b, key) {
-  const left = a[key].toLowerCase();
-  const right = b[key].toLowerCase();
+  const left = String(a[key]).toLowerCase();
+  const right = String(b[key]).toLowerCase();
   if (left < right) return -1;
   if (left > right) return 1;
   return 0;
@@ -34,17 +34,18 @@ function openPostmortem(record) {
   const dialog = document.getElementById("postmortem-dialog");
   const preview = document.getElementById("postmortem-preview");
 
-  document.getElementById("pm-date").textContent = record.date;
-  document.getElementById("pm-project").textContent = record.project;
-  document.getElementById("pm-meta").textContent = `${record.failureType} | ${record.technicalKey}`;
-  document.getElementById("pm-abstract").textContent = record.abstract;
-  document.getElementById("pm-breaking-point").textContent = record.breakingPoint;
+  document.getElementById("pm-id").textContent = `[${record.serial}]`;
+  document.getElementById("pm-title").textContent = record.title;
+  document.getElementById("pm-meta").textContent = `${record.class} | ${record.status}`;
+  document.getElementById("pm-objective").textContent = record.objective;
+  document.getElementById("pm-bottleneck").textContent = record.bottleneck;
   document.getElementById("pm-pivot").textContent = record.pivot;
 
   preview.innerHTML = `
-    <h3 class="repository-heading text-2xl">${record.project}</h3>
-    <p class="mt-4 max-w-3xl text-sm uppercase tracking-[0.15em] text-neutral-700">${record.date} | ${record.failureType}</p>
-    <p class="mt-4 max-w-3xl leading-7 text-neutral-800">${record.pivot}</p>
+    <h3 class="repository-heading text-2xl">${record.title}</h3>
+    <p class="mono-id mt-3 text-xs uppercase tracking-[0.15em]">[${record.serial}]</p>
+    <p class="mt-2 text-xs uppercase tracking-[0.12em]">${record.class} | ${record.status}</p>
+    <p class="mt-4 max-w-3xl text-sm leading-6">${record.pivot}</p>
   `;
 
   if (typeof dialog.showModal === "function") {
@@ -63,32 +64,41 @@ function renderTable() {
 
   getSortedRecords().forEach((record) => {
     const row = document.createElement("tr");
-    row.className = "border-b border-black align-top";
+    row.className = "hairline-b align-top hover:bg-[color:var(--paper-soft)]";
 
     row.innerHTML = `
-      <td class="border-r border-black px-4 py-4 text-sm">${record.date}</td>
-      <td class="border-r border-black px-4 py-4 text-base">${record.project}</td>
-      <td class="border-r border-black px-4 py-4 text-sm">${record.failureType}</td>
-      <td class="px-4 py-4">
-        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <span class="text-sm">${record.technicalKey}</span>
+      <td class="hairline-r px-3 py-2 text-xs">
+        <span class="mono-id">[${record.serial}]</span>
+      </td>
+      <td class="hairline-r px-3 py-2 text-sm">${record.title}</td>
+      <td class="hairline-r px-3 py-2 text-xs uppercase tracking-[0.1em]">${record.class}</td>
+      <td class="px-3 py-2">
+        <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <span class="text-xs uppercase tracking-[0.1em]">${record.status}</span>
           <button
             type="button"
-            class="open-record border border-black px-3 py-1 text-xs uppercase tracking-[0.1em] hover:bg-black hover:text-white"
-            data-record-id="${record.id}"
+            class="open-record hairline px-2 py-1 text-[11px] uppercase tracking-[0.1em] hover:bg-[color:var(--ink)] hover:text-[color:var(--paper)]"
+            data-record-id="${record.serial}"
           >
-            View Post-Mortem
+            Open Notebook
           </button>
         </div>
       </td>
     `;
+
+    row.addEventListener("click", (event) => {
+      if (event.target instanceof HTMLElement && event.target.closest("button")) {
+        return;
+      }
+      openPostmortem(record);
+    });
 
     tbody.appendChild(row);
   });
 
   document.querySelectorAll(".open-record").forEach((button) => {
     button.addEventListener("click", () => {
-      const record = archiveRecords.find((entry) => entry.id === button.dataset.recordId);
+      const record = archiveRecords.find((entry) => entry.serial === button.dataset.recordId);
       if (record) openPostmortem(record);
     });
   });

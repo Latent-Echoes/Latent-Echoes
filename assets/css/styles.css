@@ -1,9 +1,15 @@
 :root {
+  --paper: #fcfcfc;
+  --paper-soft: #f4f4f4;
+  --ink: #1a1a1a;
   --font-heading: "Linux Libertine", "Libertine", Georgia, "Times New Roman", serif;
   --font-body: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
 }
 
 body {
+  background: var(--paper);
+  color: var(--ink);
   font-family: var(--font-body);
   letter-spacing: 0.01em;
 }
@@ -13,17 +19,37 @@ body {
   letter-spacing: 0;
 }
 
+.mono-id {
+  font-family: var(--font-mono);
+}
+
+.hairline {
+  border: 0.5px solid var(--ink);
+}
+
+.hairline-b {
+  border-bottom: 0.5px solid var(--ink);
+}
+
+.hairline-r {
+  border-right: 0.5px solid var(--ink);
+}
+
+.hairline-t {
+  border-top: 0.5px solid var(--ink);
+}
+
 .sortable {
   transition: background-color 120ms ease, color 120ms ease;
 }
 
 .sortable:hover,
 .sortable:focus-visible {
-  background-color: #000;
-  color: #fff;
+  background-color: var(--ink);
+  color: var(--paper);
   outline: none;
 }
 
 dialog::backdrop {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(16, 16, 16, 0.85);
 }

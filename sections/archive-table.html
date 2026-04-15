@@ -1,29 +1,29 @@
-<section class="space-y-8">
+<section class="grid gap-5">
   <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-    <div class="space-y-2">
-      <h2 class="repository-heading text-3xl">The Archive Table</h2>
-      <p class="max-w-2xl text-base leading-7 text-neutral-800">
-        Sort any column to inspect chronological drift, recurring failure classes, and unstable technical assumptions.
+    <div class="space-y-1">
+      <h2 class="repository-heading text-3xl">The Registry</h2>
+      <p class="max-w-3xl text-sm leading-6">
+        Dense index of archived projects. Select any row to open the associated lab notebook.
       </p>
     </div>
-    <p class="text-xs uppercase tracking-[0.2em] text-neutral-700" id="sort-status">Sort: Date descending</p>
+    <p class="mono-id text-xs uppercase tracking-[0.2em]" id="sort-status">Sort: ID ascending</p>
   </div>
 
-  <div class="overflow-x-auto border border-black">
+  <div class="overflow-x-auto hairline">
     <table class="w-full border-collapse text-left" id="archive-table">
       <thead>
-        <tr class="border-b border-black bg-neutral-100">
-          <th scope="col" class="min-w-40 border-r border-black px-4 py-3 text-xs font-semibold uppercase tracking-[0.15em]">
-            <button type="button" class="sortable w-full text-left" data-sort-key="date">Date</button>
+        <tr class="hairline-b bg-[color:var(--paper-soft)]">
+          <th scope="col" class="min-w-44 hairline-r px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.18em]">
+            <button type="button" class="sortable w-full text-left" data-sort-key="serial">ID</button>
           </th>
-          <th scope="col" class="min-w-56 border-r border-black px-4 py-3 text-xs font-semibold uppercase tracking-[0.15em]">
-            <button type="button" class="sortable w-full text-left" data-sort-key="project">Project Name</button>
+          <th scope="col" class="min-w-64 hairline-r px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.18em]">
+            <button type="button" class="sortable w-full text-left" data-sort-key="title">Title</button>
           </th>
-          <th scope="col" class="min-w-48 border-r border-black px-4 py-3 text-xs font-semibold uppercase tracking-[0.15em]">
-            <button type="button" class="sortable w-full text-left" data-sort-key="failureType">Failure Type</button>
+          <th scope="col" class="min-w-52 hairline-r px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.18em]">
+            <button type="button" class="sortable w-full text-left" data-sort-key="class">Class</button>
           </th>
-          <th scope="col" class="min-w-56 px-4 py-3 text-xs font-semibold uppercase tracking-[0.15em]">
-            <button type="button" class="sortable w-full text-left" data-sort-key="technicalKey">Technical Key</button>
+          <th scope="col" class="min-w-56 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.18em]">
+            <button type="button" class="sortable w-full text-left" data-sort-key="status">Status</button>
           </th>
         </tr>
       </thead>
