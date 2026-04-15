@@ -1,0 +1,50 @@
+<section class="space-y-8" aria-label="Post-Mortem Deep Dive">
+  <div class="space-y-2">
+    <h2 class="repository-heading text-3xl">Post-Mortem Record</h2>
+    <p class="max-w-3xl text-base leading-7 text-neutral-800">
+      Select any entry from the archive table to open a full technical autopsy.
+    </p>
+  </div>
+
+  <article class="border border-black p-6 md:p-8" id="postmortem-preview" aria-live="polite">
+    <h3 class="repository-heading text-2xl">No Record Selected</h3>
+    <p class="mt-4 max-w-3xl text-base leading-7 text-neutral-800">
+      Choose an archive row to inspect the abstract, breaking point, and pivot pathway.
+    </p>
+  </article>
+
+  <dialog id="postmortem-dialog" class="w-[min(900px,92vw)] border border-black bg-white p-0 text-black">
+    <article class="space-y-10 p-6 md:p-10" id="postmortem-article">
+      <header class="space-y-3 border-b border-black pb-5">
+        <p class="text-xs uppercase tracking-[0.2em]" id="pm-date"></p>
+        <h3 class="repository-heading text-3xl" id="pm-project"></h3>
+        <p class="text-sm text-neutral-700" id="pm-meta"></p>
+      </header>
+
+      <section class="space-y-3">
+        <h4 class="repository-heading text-xl">Abstract</h4>
+        <p class="leading-8" id="pm-abstract"></p>
+      </section>
+
+      <section class="space-y-3">
+        <h4 class="repository-heading text-xl">The Breaking Point</h4>
+        <pre class="overflow-x-auto border border-black bg-neutral-100 p-4 text-sm leading-6"><code id="pm-breaking-point"></code></pre>
+      </section>
+
+      <section class="space-y-3">
+        <h4 class="repository-heading text-xl">The Pivot</h4>
+        <p class="leading-8" id="pm-pivot"></p>
+      </section>
+
+      <footer class="border-t border-black pt-5">
+        <button
+          type="button"
+          id="close-postmortem"
+          class="border border-black px-4 py-2 text-sm uppercase tracking-[0.15em] hover:bg-black hover:text-white"
+        >
+          Close Record
+        </button>
+      </footer>
+    </article>
+  </dialog>
+</section>

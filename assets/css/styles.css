@@ -1,0 +1,29 @@
+:root {
+  --font-heading: "Linux Libertine", "Libertine", Georgia, "Times New Roman", serif;
+  --font-body: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  letter-spacing: 0.01em;
+}
+
+.repository-heading {
+  font-family: var(--font-heading);
+  letter-spacing: 0;
+}
+
+.sortable {
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.sortable:hover,
+.sortable:focus-visible {
+  background-color: #000;
+  color: #fff;
+  outline: none;
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.7);
+}
